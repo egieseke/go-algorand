@@ -1,0 +1,8 @@
+{ "Hosts":
+  [
+    {
+      "Name": "N1",
+      "Template": "AWS-US-EAST-1-m5d.4xl"
+    }
+  ]
+}

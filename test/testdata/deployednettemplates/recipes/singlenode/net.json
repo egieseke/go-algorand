@@ -1,0 +1,31 @@
+{
+	"Hosts": [
+		{
+			"Name": "N1",
+			"Nodes": [
+				{
+					"Name": "node1",
+					"IsRelay": false,
+					"Wallets": [
+						{
+							"Name": "Wallet1",
+							"ParticipationOnly": false
+						},
+						{
+							"Name": "Wallet2",
+							"ParticipationOnly": false
+						}
+					],
+					"APIToken": "{{APIToken}}",
+					"EnableTelemetry": false,
+					"TelemetryURI": "{{TelemetryURI}}",
+					"EnableMetrics": false,
+					"MetricsURI": "{{MetricsURI}}",
+					"EnableService": false,
+					"EnableBlockStats": false,
+					"ConfigJSONOverride": "{ \"DNSBootstrapID\": \"<network>.algodev.network\", \"DeadlockDetection\": -1, \"EnableIncomingMessageFilter\": true, \"CadaverSizeTarget\": 0, \"PeerPingPeriodSeconds\": 30, \"BaseLoggerDebugLevel\": 4 }"
+				}
+			]
+		}
+	]
+}
