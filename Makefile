@@ -151,7 +151,7 @@ $(KMD_API_SWAGGER_INJECT): $(KMD_API_SWAGGER_SPEC)
 
 build: buildsrc gen
 
-buildsrc: $(SRCPATH)/crypto/lib/libsodium.a node_exporter NONGO_BIN deps $(ALGOD_API_SWAGGER_INJECT) $(KMD_API_SWAGGER_INJECT)
+buildsrc: $(SRCPATH)/crypto/lib/libsodium.a node_exporter NONGO_BIN deps
 	cd $(SRCPATH) && \
 		go install $(GOTAGS) -ldflags="$(GOLDFLAGS)" $(SOURCES)
 	cd $(SRCPATH) && \
@@ -169,15 +169,13 @@ build-race: build
 		GOBIN=$(GOPATH)/bin-race go install $(GOTAGS) -race -ldflags="$(GOLDFLAGS)" $(SOURCES) && \
 		GOBIN=$(GOPATH)/bin-race go install $(GOTAGS) -ldflags="$(GOLDFLAGS)" $(SOURCES_RACE)
 
-NONGO_BIN_FILES=$(GOPATH)/bin/find-nodes.sh $(GOPATH)/bin/update.sh $(GOPATH)/bin/updatekey.json $(GOPATH)/bin/COPYING
+NONGO_BIN_FILES=$(GOPATH)/bin/find-nodes.sh $(GOPATH)/bin/update.sh $(GOPATH)/bin/COPYING
 
 NONGO_BIN: $(NONGO_BIN_FILES)
 
 $(GOPATH)/bin/find-nodes.sh: scripts/find-nodes.sh
 
 $(GOPATH)/bin/update.sh: cmd/updater/update.sh
-
-$(GOPATH)/bin/updatekey.json: installer/updatekey.json
 
 $(GOPATH)/bin/COPYING: COPYING
 

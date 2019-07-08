@@ -21,6 +21,8 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/algorand/go-algorand/util/s3"
 )
 
 var (
@@ -32,8 +34,6 @@ var (
 func init() {
 	versionCmd.AddCommand(checkCmd)
 	versionCmd.AddCommand(getCmd)
-
-	checkCmd.Flags().StringVarP(&versionBucket, "bucket", "b", "", "S3 bucket to check for updates.")
 
 	getCmd.Flags().StringVarP(&destFile, "outputFile", "o", "", "Path for downloaded file (required)")
 	getCmd.Flags().StringVarP(&versionBucket, "bucket", "b", "", "S3 bucket to check for updates.")
@@ -56,11 +56,14 @@ var checkCmd = &cobra.Command{
 	Short: "Check the latest version available",
 	Long:  `Check the latest version available`,
 	Run: func(cmd *cobra.Command, args []string) {
-		s3, err := makeS3SessionForDownload(versionBucket)
+		if versionBucket == "" {
+			versionBucket = s3.GetS3ReleaseBucket()
+		}
+		s3Session, err := s3.MakeS3SessionForDownloadWithBucket(versionBucket)
 		if err != nil {
 			exitErrorf("Error creating s3 session %s\n", err.Error())
 		} else {
-			version, _, err := s3.getLatestVersion(channel)
+			version, _, err := s3Session.GetLatestVersion(channel)
 			if err != nil {
 				exitErrorf("Error getting latest version from s3 %s\n", err.Error())
 			}
@@ -80,11 +83,14 @@ var getCmd = &cobra.Command{
 	Short: "Download the latest version available",
 	Long:  `Download the latest version available`,
 	Run: func(cmd *cobra.Command, args []string) {
-		s3, err := makeS3SessionForDownload(versionBucket)
+		if versionBucket == "" {
+			versionBucket = s3.GetS3ReleaseBucket()
+		}
+		s3Session, err := s3.MakeS3SessionForDownloadWithBucket(versionBucket)
 		if err != nil {
 			exitErrorf("Error creating s3 session %s\n", err.Error())
 		} else {
-			version, name, err := s3.getVersion(channel, specificVersion)
+			version, name, err := s3Session.GetVersion(channel, specificVersion)
 			if err != nil {
 				exitErrorf("Error getting latest version from s3 %s\n", err.Error())
 			}
@@ -98,7 +104,7 @@ var getCmd = &cobra.Command{
 				exitErrorf("Error creating output file: %s\n", err.Error())
 			}
 
-			err = s3.downloadFile(name, file)
+			err = s3Session.DownloadFile(name, file)
 			if err != nil {
 				exitErrorf("Error downloading file: %s\n", err.Error())
 				// script should delete the file.
