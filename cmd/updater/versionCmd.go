@@ -35,8 +35,10 @@ func init() {
 	versionCmd.AddCommand(checkCmd)
 	versionCmd.AddCommand(getCmd)
 
+	checkCmd.Flags().StringVarP(&versionBucket, "bucket", "b", "", "S3 bucket containing updates.")
+
 	getCmd.Flags().StringVarP(&destFile, "outputFile", "o", "", "Path for downloaded file (required)")
-	getCmd.Flags().StringVarP(&versionBucket, "bucket", "b", "", "S3 bucket to check for updates.")
+	getCmd.Flags().StringVarP(&versionBucket, "bucket", "b", "", "S3 bucket containing updates.")
 	getCmd.Flags().Uint64VarP(&specificVersion, "version", "v", 0, "Specific version to download")
 	getCmd.MarkFlagRequired("outputFile")
 }
@@ -63,7 +65,7 @@ var checkCmd = &cobra.Command{
 		if err != nil {
 			exitErrorf("Error creating s3 session %s\n", err.Error())
 		} else {
-			version, _, err := s3Session.GetLatestVersion(channel)
+			version, _, err := s3Session.GetLatestUpdateVersion(channel)
 			if err != nil {
 				exitErrorf("Error getting latest version from s3 %s\n", err.Error())
 			}
@@ -90,7 +92,7 @@ var getCmd = &cobra.Command{
 		if err != nil {
 			exitErrorf("Error creating s3 session %s\n", err.Error())
 		} else {
-			version, name, err := s3Session.GetVersion(channel, specificVersion)
+			version, name, err := s3Session.GetUpdateVersion(channel, specificVersion)
 			if err != nil {
 				exitErrorf("Error getting latest version from s3 %s\n", err.Error())
 			}
