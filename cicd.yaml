@@ -17,4 +17,10 @@ stages:
     releaseVersion: ${GO_ALGORAND_RELEASE_VERSION}
     githubPatToken: ${GITHUB_PAT_TOKEN}
     githubRepoFullName: algorand/go-algorand
+  docker-build:
+  - task: shell.docker.Build
+    buildArgs: ARCH=amd64
+    buildContextPath: .
+    tags: amd64/centos-algo:7
+    dockerFilePath: docker/build/Dockerfile_centos
 
