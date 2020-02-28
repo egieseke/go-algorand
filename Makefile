@@ -196,6 +196,13 @@ $(addprefix short_test_target_, $(UNIT_TEST_SOURCES)): build
 integration: build-race
 	./test/scripts/run_integration_tests.sh
 
+ci-integration:
+	export NORACEBUILD="TRUE" && \
+	export NODEBINDIR=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin && \
+	export PATH=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin:$$PATH  && \
+	export SRCROOT=$(SRCPATH) && \
+	./test/scripts/e2e_go_tests.sh
+
 testall: fulltest integration
 
 # generated files we should make sure we clean
