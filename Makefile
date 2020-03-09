@@ -183,6 +183,9 @@ $(GOPATH1)/bin/%:
 test: build
 	go test $(GOTAGS) -race $(UNIT_TEST_SOURCES) -timeout 3600s
 
+ci-test: build
+	go test $(GOTAGS) $(UNIT_TEST_SOURCES) -timeout 3600s
+
 fulltest: build-race
 	for PACKAGE_DIRECTORY in $(UNIT_TEST_SOURCES) ; do \
 		go test $(GOTAGS) -timeout 2000s -race $$PACKAGE_DIRECTORY; \
@@ -197,10 +200,10 @@ integration: build-race
 	./test/scripts/run_integration_tests.sh
 
 ci-integration:
-	export NORACEBUILD="TRUE" && \
-	export NODEBINDIR=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin && \
-	export PATH=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin:$$PATH  && \
-	export SRCROOT=$(SRCPATH) && \
+	NORACEBUILD="TRUE" \
+	NODEBINDIR=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin \
+	PATH=$(SRCPATH)/tmp/node_pkgs/$(OS_TYPE)/$(ARCH)/dev/$(OS_TYPE)-$(ARCH)/bin:$$PATH \
+	SRCROOT=$(SRCPATH) \
 	./test/scripts/e2e_go_tests.sh
 
 testall: fulltest integration
