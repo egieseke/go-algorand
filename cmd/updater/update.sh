@@ -20,6 +20,7 @@ GENESIS_NETWORK_DIR=""
 GENESIS_NETWORK_DIR_SPEC=""
 SKIP_UPDATE=0
 TOOLS_OUTPUT_DIR=""
+RANDOM_WAIT=1
 
 set -o pipefail
 
@@ -88,6 +89,9 @@ while [ "$1" != "" ]; do
             ;;
         -s)
             SKIP_UPDATE=1
+            ;;
+        -nowait)
+            RANDOM_WAIT=0
             ;;
         -gettools)
             shift
@@ -562,6 +566,15 @@ function apply_fixups() {
     done
 }
 
+function random_wait() {
+   if [ "${RANDOM_WAIT}" -eq 1 ]; then
+      WAIT_TIME="$[ ( $RANDOM % 50 ) + 1 ]m"
+      echo "waiting ${WAIT_TIME} before starting update"
+      sleep "${WAIT_TIME}"
+      echo "resuming update"
+   fi
+}
+
 #--------------------------------------------
 # Main Update Driver
 
@@ -583,6 +596,8 @@ if [ "${UPDATETYPE}" != "install" ]; then
         exit 1
     fi
 fi
+
+random_wait
 
 # If we're initiating an update/install, check for an update and if we have a new one,
 # expand it and invoke the new update.sh script.
