@@ -597,6 +597,7 @@ if [ "${UPDATETYPE}" != "install" ]; then
     fi
 fi
 
+# wait a random amount of time to help distribute node updates.
 random_wait
 
 # If we're initiating an update/install, check for an update and if we have a new one,
