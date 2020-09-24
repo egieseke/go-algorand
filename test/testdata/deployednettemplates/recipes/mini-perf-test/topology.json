@@ -1,0 +1,24 @@
+{ "Hosts":
+  [
+    {
+      "Name": "R1",
+      "Template": "AWS-US-EAST-2-m5d.4xl"
+    },
+    {
+      "Name": "NPN1",
+      "Template": "AWS-US-EAST-2-m5d.4xl"
+    },
+    {
+      "Name": "NPN2",
+      "Template": "AWS-US-EAST-2-m5d.4xl"
+    },
+    {
+      "Name": "N1",
+      "Template": "AWS-US-EAST-2-m5d.4xl"
+    },
+    {
+      "Name": "N2",
+      "Template": "AWS-US-EAST-2-m5d.4xl"
+    }
+  ]
+}
